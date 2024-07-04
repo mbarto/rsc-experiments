@@ -1,3 +1,3 @@
-# RSC Experiment: no server
+# RSC Experiment: no server with pages
 
-This is a very minimal example of RSC usage, from the client point of view, without any server.
+This is an example where different RCS payloads are loaded when clicking links to simulate pages navigation.
