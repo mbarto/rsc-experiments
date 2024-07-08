@@ -6,8 +6,9 @@ let timeout = null;
 let counter = 0;
 const chunks = [
   '9:"$Sreact.suspense"\n',
-  '0:["$","div",null,{"children":[["Hello World!"], ["$","$9",null,{"fallback":["$", "p", null, {"children": "Loading..."}],"children":"$L1"}]]}]\n',
-  '1:["$","p",null,{"children":"Hello Again!"}]\n',
+  '0:["$","div",null,{"children":[["Hello World!"],["$","$9",null,{"fallback":["$", "p", null, {"children": "Loading..."}],"children":"$L1"}]]}]\n',
+  '1:["$","div",null,{"children":[["Hello Again!"],["$","$9",null,{"fallback":["$", "p", null, {"children": "Loading..."}],"children":"$L2"}]]}]\n',
+  '2:["$","div",null,{"children":"Bye!"}]\n',
 ];
 const encoder = new TextEncoder();
 
