@@ -5,10 +5,47 @@ import { createFromReadableStream } from "react-server-dom-esm/client";
 let timeout = null;
 let counter = 0;
 const chunks = [
-  '9:"$Sreact.suspense"\n',
-  '0:["$","div",null,{"children":[["Hello World!"],["$","$9",null,{"fallback":["$", "p", null, {"children": "Loading..."}],"children":"$L1"}]]}]\n',
-  '1:["$","div",null,{"children":[["Hello Again!"],["$","$9",null,{"fallback":["$", "p", null, {"children": "Loading..."}],"children":"$L2"}]]}]\n',
+  '9:"$Sreact.suspense"\n' +
+    `0:${JSON.stringify([
+      "$",
+      "div",
+      null,
+      {
+        children: [
+          ["Hello World!"],
+          [
+            "$",
+            "$9",
+            null,
+            {
+              fallback: [
+                "$",
+                "p",
+                null,
+                { children: "Loading...", style: { color: "blue" } },
+              ],
+              children: "$L1",
+            },
+          ],
+          [
+            "$",
+            "$9",
+            null,
+            {
+              fallback: [
+                "$",
+                "p",
+                null,
+                { children: "Loading...", style: { color: "red" } },
+              ],
+              children: "$L2",
+            },
+          ],
+        ],
+      },
+    ])}\n`,
   '2:["$","div",null,{"children":"Bye!"}]\n',
+  '1:["$","div",null,{"children":"Hello Again!"}]\n',
 ];
 const encoder = new TextEncoder();
 
