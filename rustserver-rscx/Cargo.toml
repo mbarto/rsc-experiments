@@ -1,0 +1,22 @@
+[package]
+name = "rust-server-components"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[dependencies]
+proc-macro2 = "1.0.86"
+proc-macro2-diagnostics = "0.10.1"
+rocket = "0.5.1"
+rscx = "0.1.14"
+rstml = "0.11.2"
+tokio = "1.40.0"
+convert_case = "0.6.0"
+html-escape = "0.2.13"
+quote = "1.0.33"
+syn = { version = "2.0.29", features = ["full"] }
+
+[lib]
+name = "jsx"
+path = "src/jsx.rs"
+proc-macro = true
