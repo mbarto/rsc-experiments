@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 
 const path = fileURLToPath(import.meta.url);
-const root = resolve(dirname(path), ".");
+const root = resolve(dirname(path), "client");
 
 const plugins = [react()];
 
