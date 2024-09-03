@@ -1062,6 +1062,8 @@ dependencies = [
  "rocket",
  "rscx",
  "rstml",
+ "serde",
+ "serde_json",
  "syn",
  "tokio",
 ]

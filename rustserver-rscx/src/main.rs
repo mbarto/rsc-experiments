@@ -5,17 +5,18 @@ use rocket::fs::{relative, FileServer, Options};
 
 mod app {
     use jsx;
-    use rocket::http::ContentType;
-    use rscx::{component, html, props, CollectFragment};
+    use rscx::{component, props, CollectFragment};
 
     #[rocket::get("/rsc")]
     pub async fn rsc() -> String {
         jsx::jsx! {
-            <div>Hello, world!</div>
+            <Section title="Hello">
+                <Items />
+            </Section>
         }
     }
 
-    /* #[component]
+    #[component]
     /// mark functions with #[component] to use them as components inside html! macro
     fn Section(
         // you can use `builder` attributes to specify a default value (makes this prop optional)
@@ -43,7 +44,7 @@ mod app {
                 }
             </ul>
         }
-    }*/
+    }
 
     /// async functions can be easily used in the body of a component, as every component is an async
     /// function

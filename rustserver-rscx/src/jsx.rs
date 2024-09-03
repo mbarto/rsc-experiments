@@ -1,22 +1,17 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2_diagnostics::Diagnostic;
-use quote::{quote, quote_spanned, ToTokens};
+use quote::{quote, ToTokens};
 
 use rstml::{
     node::{KeyedAttribute, Node, NodeAttribute, NodeElement, NodeName},
     Parser, ParserConfig,
 };
 use std::collections::HashSet;
-use syn::punctuated::Punctuated;
-use syn::{parse::Parse, parse_quote, spanned::Spanned, Expr, ExprLit, FnArg, ItemStruct, Token};
+use syn::{spanned::Spanned, Expr, ExprLit};
 
 #[proc_macro]
 pub fn jsx(tokens: TokenStream) -> TokenStream {
-    jsx_inner(tokens, false)
-}
-
-fn jsx_inner(tokens: TokenStream, ide_helper: bool) -> TokenStream {
     let config = ParserConfig::new()
         .recover_block(true)
         .element_close_use_default_wildcard_ident(true)
@@ -24,25 +19,15 @@ fn jsx_inner(tokens: TokenStream, ide_helper: bool) -> TokenStream {
 
     let parser = Parser::new(config);
     let (nodes, errors) = parser.parse_recoverable(tokens).split_vec();
-    process_nodes(ide_helper, &nodes, errors).into()
+    process_nodes(&nodes, errors).into()
 }
 
-fn process_nodes<'n>(
-    ide_helper: bool,
-    nodes: &'n Vec<Node>,
-    errors: Vec<Diagnostic>,
-) -> proc_macro2::TokenStream {
+fn process_nodes<'n>(nodes: &'n Vec<Node>, errors: Vec<Diagnostic>) -> proc_macro2::TokenStream {
     let WalkNodesOutput {
         static_format: html_string,
         values,
-        collected_elements: elements,
         diagnostics,
     } = walk_nodes(&nodes);
-    let docs = if ide_helper {
-        generate_tags_docs(elements)
-    } else {
-        vec![]
-    };
     let errors = errors
         .into_iter()
         .map(|e| e.emit_as_expr_tokens())
@@ -51,8 +36,6 @@ fn process_nodes<'n>(
         {
             // Make sure that "compile_error!(..);"  can be used in this context.
             #(#errors;)*
-            // Make sure that "enum x{};" and "let _x = crate::element;"  can be used in this context
-            #(#docs;)*
             format!(#html_string, #(rscx::FormatWrapper::new(#values)),*)
         }
     }
@@ -76,54 +59,24 @@ fn empty_elements_set() -> HashSet<&'static str> {
     .collect()
 }
 
-fn generate_tags_docs(elements: Vec<&NodeName>) -> Vec<proc_macro2::TokenStream> {
-    // Mark some of elements as type,
-    // and other as elements as fn in crate::docs,
-    // to give an example how to link tag with docs.
-    let elements_as_type: HashSet<&'static str> =
-        vec!["html", "head", "meta", "link", "body", "div"]
-            .into_iter()
-            .collect();
-
-    elements
-        .into_iter()
-        .map(|e| {
-            if elements_as_type.contains(&*e.to_string()) {
-                let element = quote_spanned!(e.span() => enum);
-                quote!({#element X{}})
-            } else {
-                // let _ = crate::docs::element;
-                let element = quote_spanned!(e.span() => element);
-                quote!(let _ = crate::docs::#element)
-            }
-        })
-        .collect()
-}
-
 #[derive(Default)]
-struct WalkNodesOutput<'a> {
+struct WalkNodesOutput {
     static_format: String,
     // Use proc_macro2::TokenStream instead of syn::Expr
     // to provide more errors to the end user.
     values: Vec<proc_macro2::TokenStream>,
     // Additional diagnostic messages.
     diagnostics: Vec<proc_macro2::TokenStream>,
-    // Collect elements to provide semantic highlight based on element tag.
-    // No differences between open tag and closed tag.
-    // Also multiple tags with same name can be present,
-    // because we need to mark each of them.
-    collected_elements: Vec<&'a NodeName>,
 }
-impl<'a> WalkNodesOutput<'a> {
-    fn extend(&mut self, other: WalkNodesOutput<'a>) {
+impl WalkNodesOutput {
+    fn extend(&mut self, other: WalkNodesOutput) {
         self.static_format.push_str(&other.static_format);
         self.values.extend(other.values);
         self.diagnostics.extend(other.diagnostics);
-        self.collected_elements.extend(other.collected_elements);
     }
 }
 
-fn walk_nodes<'a>(nodes: &'a Vec<Node>) -> WalkNodesOutput<'a> {
+fn walk_nodes(nodes: &Vec<Node>) -> WalkNodesOutput {
     let mut out = WalkNodesOutput::default();
 
     for node in nodes {
@@ -144,10 +97,6 @@ fn walk_nodes<'a>(nodes: &'a Vec<Node>) -> WalkNodesOutput<'a> {
                         _ => {
                             out.static_format
                                 .push_str(&format!("0:[\"$\",\"{}\",null,{{{{\"children\":", name));
-                            out.collected_elements.push(&element.open_tag.name);
-                            if let Some(e) = &element.close_tag {
-                                out.collected_elements.push(&e.name)
-                            }
                         }
                     }
 
@@ -310,7 +259,7 @@ impl<'e> ToTokens for CustomElement<'_> {
 
         let children = &self.e.children;
         if !children.is_empty() {
-            let c = process_nodes(false, children, vec![]);
+            let c = process_nodes(children, vec![]);
             chain.push(quote! { .children(#c) });
         }
 
