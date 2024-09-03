@@ -7,6 +7,8 @@ use rstml::{
     node::{KeyedAttribute, Node, NodeAttribute, NodeElement, NodeName},
     Parser, ParserConfig,
 };
+use serde_json::json;
+use serde_json::Value;
 use std::collections::HashSet;
 use syn::{spanned::Spanned, Expr, ExprLit};
 
@@ -18,12 +20,19 @@ pub fn jsx(tokens: TokenStream) -> TokenStream {
         .always_self_closed_elements(empty_elements_set());
 
     let parser = Parser::new(config);
-    let (nodes, errors) = parser.parse_recoverable(tokens).split_vec();
-    process_nodes(&nodes, errors).into()
+    let (nodes, _) = parser.parse_recoverable(tokens).split_vec();
+    process_nodes(&nodes).into()
 }
 
-fn process_nodes<'n>(nodes: &'n Vec<Node>, errors: Vec<Diagnostic>) -> proc_macro2::TokenStream {
-    let WalkNodesOutput {
+fn process_nodes<'n>(nodes: &'n Vec<Node>) -> proc_macro2::TokenStream {
+    let json = walk_nodes(nodes).to_string();
+    //
+    quote! {
+        {
+            format!("0:{}\n", #json)
+        }
+    }
+    /*let WalkNodesOutput {
         static_format: html_string,
         values,
         diagnostics,
@@ -38,7 +47,7 @@ fn process_nodes<'n>(nodes: &'n Vec<Node>, errors: Vec<Diagnostic>) -> proc_macr
             #(#errors;)*
             format!(#html_string, #(rscx::FormatWrapper::new(#values)),*)
         }
-    }
+    }*/
 }
 
 fn is_empty_element(name: &str) -> bool {
@@ -76,7 +85,40 @@ impl WalkNodesOutput {
     }
 }
 
-fn walk_nodes(nodes: &Vec<Node>) -> WalkNodesOutput {
+fn walk_nodes(nodes: &Vec<Node>) -> Value {
+    let mut result = json!([]);
+    // let result = json!(["$", "div", null, {"children": "Hello World!"}]);
+    for node in nodes {
+        match node {
+            Node::Element(element) => {
+                let name = element.name().to_string();
+                if !is_empty_element(&name) {
+                    let mut children = vec![];
+                    for child in &element.children {
+                        children.push(walk_nodes(&vec![child.clone()]));
+                    }
+                    if (children.len() == 1) {
+                        result = json!(["$", name, null, {"children": children[0]}]);
+                    } else {
+                        result = json!(["$", name, null, {"children": children}]);
+                    }
+                } else {
+                    result = json!(["$", name, null, {"children": []}])
+                }
+            }
+            Node::Text(text) => {
+                result = json!(text.value_string());
+            }
+            Node::RawText(text) => {
+                result = json!(text.to_string_best());
+            }
+            _ => {}
+        }
+    }
+    return result;
+}
+
+/* fn walk_nodes(nodes: &Vec<Node>) -> WalkNodesOutput {
     let mut out = WalkNodesOutput::default();
 
     for node in nodes {
@@ -291,4 +333,4 @@ impl<'e> ToTokens for CustomElement<'_> {
             #name(#(#chain)*).await
         });
     }
-}
+}*/

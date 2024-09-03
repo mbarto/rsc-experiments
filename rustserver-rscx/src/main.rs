@@ -5,7 +5,7 @@ use rocket::fs::{relative, FileServer, Options};
 
 mod app {
     use jsx;
-    use rscx::{component, props, CollectFragment};
+    use rscx::{component, props};
 
     #[rocket::get("/rsc")]
     pub async fn rsc() -> String {
