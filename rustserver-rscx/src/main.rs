@@ -4,12 +4,11 @@ extern crate rocket;
 use rocket::fs::{relative, FileServer, Options};
 
 mod app {
-    use jsx;
-    use rscx::{component, props};
+    use rscx::{component, html, props, CollectFragment};
 
     #[rocket::get("/rsc")]
     pub async fn rsc() -> String {
-        jsx::jsx! {
+        html! {
             <Section title="Hello">
                 <Items />
             </Section>
@@ -17,13 +16,11 @@ mod app {
     }
 
     #[component]
-    /// mark functions with #[component] to use them as components inside html! macro
     fn Section(
-        // you can use `builder` attributes to specify a default value (makes this prop optional)
         #[builder(default = "Default title".into(), setter(into))] title: String,
         #[builder(default)] children: String,
     ) -> String {
-        jsx::jsx! {
+        html! {
             <div>
                 <h1>{ title }</h1>
                 { children }
@@ -34,12 +31,12 @@ mod app {
     #[component]
     async fn Items() -> String {
         let data = load_data_async().await;
-        jsx::jsx! {
+        html! {
             <ul>
                 {
                     data
                         .into_iter()
-                        .map(|item| jsx::jsx! { <li>{ item }</li> })
+                        .map(|item| html! { <li>{ item }</li> })
                         .collect_fragment() // helper method to collect a list of components into a String
                 }
             </ul>
