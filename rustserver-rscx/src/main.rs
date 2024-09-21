@@ -1,18 +1,18 @@
 #[macro_use]
 extern crate rocket;
-
 use rocket::fs::{relative, FileServer, Options};
 
 mod app {
+    use flight::flight;
     use rscx::{component, html, props, CollectFragment};
 
     #[rocket::get("/rsc")]
     pub async fn rsc() -> String {
-        html! {
+        flight(html! {
             <Section title="Hello">
                 <Items />
             </Section>
-        }
+        })
     }
 
     #[component]

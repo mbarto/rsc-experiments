@@ -1,4 +1,4 @@
-use jsx::jsx;
+use flight::flight;
 use rscx::{component, html, props};
 use serde_json::json;
 
@@ -8,12 +8,9 @@ mod tests {
 
     #[test]
     fn simple_html() {
-        let text = "<div>Hello World!</div>";
-        let result1 = html! {
+        let result = flight(html! {
             <div>Hello World!</div>
-        };
-        assert_eq!(result1, text);
-        let result = jsx!(<div>Hello World!</div>);
+        });
         assert_eq!(
             result,
             "0:[\"$\",\"div\",null,{\"children\":\"Hello World!\"}]\n"
@@ -22,7 +19,7 @@ mod tests {
 
     #[test]
     fn complex_html() {
-        let result1 = html! {
+        let result = flight(html! {
             <div>
                 <h1>Hello</h1>
                 <ul>
@@ -31,21 +28,7 @@ mod tests {
                     <li>c</li>
                 </ul>
             </div>
-        };
-        assert_eq!(
-            result1,
-            "<div><h1>Hello</h1><ul><li>a</li><li>b</li><li>c</li></ul></div>"
-        );
-        let result = jsx! {
-            <div>
-                <h1>Hello</h1>
-                <ul>
-                    <li>a</li>
-                    <li>b</li>
-                    <li>c</li>
-                </ul>
-            </div>
-        };
+        });
         assert_eq!(
             result,
             format!(
@@ -73,18 +56,17 @@ mod tests {
             }
         }
 
-        let result = html! {
+        let result = flight(html! {
             <Component/>
-        };
-        assert_eq!(result, "<div><h1>Hello</h1></div>");
-        /*assert_eq!(
+        });
+        assert_eq!(
             result,
             format!(
                 "0:{}\n",
                 &json!(["$", "div", null, {"children": [
-                    ["$", "h1", null, {"children": "Hello"}]
+                    "$", "h1", null, {"children": "Hello"}
                 ]}])
             )
-        );*/
+        );
     }
 }
