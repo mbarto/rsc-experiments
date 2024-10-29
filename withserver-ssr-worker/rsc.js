@@ -2,16 +2,13 @@ import { Writable } from "stream";
 import { parentPort } from "worker_threads";
 import { createElement as h } from "react";
 import { renderToPipeableStream } from "react-server-dom-esm/server";
-
-function App({ page }) {
-  return h("h1", null, `Page ${page}`);
-}
+import { Page } from "./app.js";
 
 async function renderApp(requestId, page) {
   return new Promise((resolve) => {
-    const { pipe } = renderToPipeableStream(h(App, { page }));
+    const { pipe } = renderToPipeableStream(h(Page, { page }));
     const writable = new Writable({
-      write(chunk, encoding, callback) {
+      write(chunk, _, callback) {
         parentPort.postMessage({
           type: "chunk",
           data: chunk.toString("utf-8"),
