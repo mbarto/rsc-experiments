@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --legacy-watch server.js & nodemon --legacy-watch --conditions=react-server rsc.js",
+    "build": "vite build",
+    "lint": "eslint . --ext .js,.jsx --fix"
+  },
+  "dependencies": {
+    "@fastify/vite": "^6.0.7",
+    "fastify": "^4.28.1",
+    "react": "19.0.0-beta-94eed63c49-20240425",
+    "react-dom": "19.0.0-beta-94eed63c49-20240425",
+    "react-server-dom-esm": "npm:@kentcdodds/tmp-react-server-dom-esm@19.0.0-beta-94eed63c49-20240425"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "nodemon": "^3.1.4",
+    "vite": "^5.3.3"
+  }
+}
