@@ -5,10 +5,7 @@ import { createElement as h } from "react";
 import { renderToString } from "react-dom/server";
 import { Worker } from "worker_threads";
 import { v4 as uuidv4 } from "uuid";
-
-function App({ page }) {
-  return h("h1", null, `Page ${page}`);
-}
+import { Page, App } from "./app.js";
 
 export async function main() {
   const server = Fastify();
@@ -58,7 +55,7 @@ export async function main() {
   });
 
   server.get("/", async (_, reply) => {
-    let page = await renderToString(h(App, { page: 1 }));
+    let page = await renderToString(h(App, null, [h(Page, { page: 0 })]));
     const html = `<!doctype html>
 <html lang="en">
 	<head>
@@ -76,30 +73,8 @@ window.__vite_plugin_react_preamble_installed__ = true
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSC Experiments - SSR with worker</title>
   </head>
-	</head>
 	<body>
-		<div id="root"><header>Header</header>
-      <aside>
-        <h1>Menu</h1>
-        <menu>
-          <li>
-            <a href="#">
-              Page 1
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              Page 2
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              Page 3
-            </a>
-          </li>
-        </menu>
-      </aside>
-      <main>${page}</main></div>
+		<div id="root">${page}</div>
       <script type="module" crossorigin src="/main.jsx"></script>
     </body></html>`;
     return reply.type("text/html").send(html);
