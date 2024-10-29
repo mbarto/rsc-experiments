@@ -27,7 +27,7 @@ async function renderApp(requestId, page) {
 
 async function handleMessage(message) {
   if (message.type === "rsc") {
-    await renderApp(message.requestId, message.page);
+    await renderApp(message.requestId, Number(message.page));
   }
 }
 
