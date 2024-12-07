@@ -8,10 +8,10 @@ function Root({ content }) {
 }
 
 function Layout() {
-  const [pagePromise, setPagePromise] = useState(null);
+  const [page, setPage] = useState(null);
 
-  function setPage(page) {
-    setPagePromise(createFromFetch(fetch(`rsc/page${page}.rsc`)));
+  function loadPage(page) {
+    setPage(createFromFetch(fetch(`rsc/page${page}.rsc`)));
   }
 
   return (
@@ -21,30 +21,24 @@ function Layout() {
         <h1>Menu</h1>
         <menu>
           <li>
-            <a href="#" onClick={() => setPage(1)}>
+            <a href="#" onClick={() => loadPage(1)}>
               Page 1
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => setPage(2)}>
+            <a href="#" onClick={() => loadPage(2)}>
               Page 2
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => setPage(3)}>
+            <a href="#" onClick={() => loadPage(3)}>
               Page 3
             </a>
           </li>
         </menu>
       </aside>
       <main>
-        {pagePromise ? (
-          <Suspense fallback={<p>Loading...</p>}>
-            <Root content={pagePromise} />
-          </Suspense>
-        ) : (
-          <p>Click on a menu item</p>
-        )}
+        {page ? <Root content={page} /> : <p>Click on a menu item</p>}
       </main>
       <footer>Footer</footer>
     </>

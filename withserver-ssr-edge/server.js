@@ -50,7 +50,7 @@ export async function main() {
     ${viteScript}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RSC Experiments - SSR with worker</title>
+    <title>RSC Experiments - SSR with edge</title>
   </head>
 	<body>
 		<div id="root">${page}</div>
