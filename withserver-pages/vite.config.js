@@ -1,13 +1,18 @@
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 const path = fileURLToPath(import.meta.url);
 const root = resolve(dirname(path), "client");
 
 const plugins = [react()];
 
-export default {
+// https://vitejs.dev/config/
+export default defineConfig({
   root,
-  plugins,
-};
+  plugins: [react()],
+  define: {
+    __webpack_require__: {},
+  },
+});

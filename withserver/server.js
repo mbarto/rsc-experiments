@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import Fastify from "fastify";
 import FastifyVite from "@fastify/vite";
-import { renderToPipeableStream } from "react-server-dom-esm/server";
+import { renderToPipeableStream } from "react-server-dom-webpack/server";
 import { createElement as h } from "react";
 
 function App() {

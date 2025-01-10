@@ -5,7 +5,7 @@ import FastifyMultipart from "@fastify/multipart";
 import {
   renderToPipeableStream,
   decodeReply,
-} from "react-server-dom-esm/server";
+} from "react-server-dom-webpack/server";
 import { createElement as h } from "react";
 import { MyClientComponent } from "./client/my-client-component.js";
 import { myAction } from "./server/actions.js";
@@ -46,13 +46,25 @@ export async function main() {
     const result = await action(...args);
     const root = h(App, { item: result.message });
     const payload = { root, returnValue: result };
-    const { pipe } = renderToPipeableStream(payload, moduleBasePath);
+    const { pipe } = renderToPipeableStream(payload, {
+      [`${moduleBasePath}/my-client-component.js#MyClientComponent`]: {
+        id: "./my-client-component.js",
+        chunks: ["./my-client-component.js"],
+        name: "MyClientComponent",
+      },
+    });
     pipe(reply.raw);
     await new Promise((resolve) => reply.raw.on("finish", resolve));
   });
 
   server.get("/rsc", (_, reply) => {
-    const { pipe } = renderToPipeableStream(h(App), moduleBasePath);
+    const { pipe } = renderToPipeableStream(h(App), {
+      [`${moduleBasePath}/my-client-component.js#MyClientComponent`]: {
+        id: "./my-client-component.js",
+        chunks: ["./my-client-component.js"],
+        name: "MyClientComponent",
+      },
+    });
     pipe(reply.raw);
   });
 

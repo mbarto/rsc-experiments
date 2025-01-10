@@ -1,4 +1,7 @@
-import { resolve, load as reactLoad } from "react-server-dom-esm/node-loader";
+import {
+  resolve,
+  load as reactLoad,
+} from "react-server-dom-webpack/node-loader";
 
 export { resolve };
 

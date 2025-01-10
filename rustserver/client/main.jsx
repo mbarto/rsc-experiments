@@ -1,6 +1,6 @@
 import { use } from "react";
 import { createRoot } from "react-dom/client";
-import { createFromFetch } from "react-server-dom-esm/client";
+import { createFromFetch } from "react-server-dom-webpack/client";
 
 const initialContentFetchPromise = fetch("/rsc");
 const initialContentPromise = createFromFetch(initialContentFetchPromise);

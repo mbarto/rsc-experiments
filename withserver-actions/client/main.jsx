@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import {
   createFromFetch as reactCreateFromFetch,
   encodeReply,
-} from "react-server-dom-esm/client";
+} from "react-server-dom-webpack/client";
 
 const initialContentFetchPromise = fetch("/rsc");
 

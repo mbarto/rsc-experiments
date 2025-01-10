@@ -1,7 +1,7 @@
 import { Writable } from "stream";
 import { parentPort } from "worker_threads";
 import { createElement as h } from "react";
-import { renderToPipeableStream } from "react-server-dom-esm/server";
+import { renderToPipeableStream } from "react-server-dom-webpack/server";
 import { Page } from "./app.js";
 
 async function renderApp(requestId, page) {

@@ -9,9 +9,9 @@
     "@fastify/multipart": "^8.3.0",
     "@fastify/vite": "^6.0.7",
     "fastify": "^4.28.1",
-    "react": "19.0.0-beta-94eed63c49-20240425",
-    "react-dom": "19.0.0-beta-94eed63c49-20240425",
-    "react-server-dom-esm": "npm:@kentcdodds/tmp-react-server-dom-esm@19.0.0-beta-94eed63c49-20240425"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-server-dom-webpack": "19.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

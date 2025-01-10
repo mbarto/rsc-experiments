@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import {
   createFromFetch,
   createFromReadableStream,
-} from "react-server-dom-esm/client";
+} from "react-server-dom-webpack/client";
 import "./main.css";
 import { App } from "../app.js";
 
