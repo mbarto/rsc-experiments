@@ -1,6 +1,6 @@
 import { use, useState, useEffect, useActionState, useRef } from "react";
 import { createRoot } from "react-dom/client";
-import { createFromFetch as reactCreateFromFetch } from "react-server-dom-esm/client";
+import { createFromFetch as reactCreateFromFetch } from "react-server-dom-webpack/client";
 
 global.reactHooks = {
   useState,

@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RSC Experiments - no server - actions with mutations</title>
+    <script>
+      const __module_map__ = new Map();
+
+      __webpack_chunk_load__ = async function (moduleId) {
+        const mod = await import(moduleId);
+        __module_map__.set(moduleId, mod);
+        return mod;
+      };
+      __webpack_require__ = function (moduleId) {
+        return __module_map__.get(moduleId);
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

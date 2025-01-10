@@ -1,6 +1,6 @@
 import { use } from "react";
 import { createRoot } from "react-dom/client";
-import { createFromReadableStream } from "react-server-dom-esm/client";
+import { createFromReadableStream } from "react-server-dom-webpack/client";
 
 let timeout = null;
 let counter = 0;

@@ -1,4 +1,4 @@
-2:I["/my-client-component.js","MyClientComponent"]
+2:I["/my-client-component.js", ["/my-client-component.js"], "MyClientComponent", ""]
 1:{"name":"App","env":"Server","owner":null}
 0:D"$1"
 3:{"id":"myAction","bound":null}
