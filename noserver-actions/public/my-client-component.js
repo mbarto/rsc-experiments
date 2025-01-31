@@ -1,5 +1,4 @@
-"use client";
-import { createElement as h } from "https://esm.sh/react@19.0.0-beta-94eed63c49-20240425?pin=v126&dev";
+import { createElement as h } from "https://esm.sh/react@19.0.0?pin=v126&dev";
 
 const { useState, useRef, useActionState } = global.reactHooks;
 
