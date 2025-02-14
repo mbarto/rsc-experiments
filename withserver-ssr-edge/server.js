@@ -2,7 +2,7 @@
 import Fastify from "fastify";
 import FastifyVite from "@fastify/vite";
 import { createElement as h } from "react";
-import { renderToString } from "react-dom/server";
+import { prerender } from "react-dom/static.edge";
 import { Page, App } from "./app.js";
 
 const viteScript = `<script type="module">
@@ -42,7 +42,7 @@ export async function main() {
   server.get("/", async (req, reply) => {
     const rscContent = await fetchRsc(req, 0);
 
-    let page = await renderToString(h(App, null, [h(Page, { page: 0 })]));
+    let page = await prerender(h(App, null, [h(Page, { page: 0 })]));
     const html = `<!doctype html>
 <html lang="en">
 	<head>

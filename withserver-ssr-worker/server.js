@@ -2,7 +2,7 @@
 import Fastify from "fastify";
 import FastifyVite from "@fastify/vite";
 import { createElement as h } from "react";
-import { renderToString } from "react-dom/server";
+import { prerender } from "react-dom/static.edge";
 import { Worker } from "worker_threads";
 import { v4 as uuidv4 } from "uuid";
 import { Page, App } from "./app.js";
@@ -68,7 +68,7 @@ export async function main() {
     const rscResponse = await fetch(rscUrl);
     const rscContent = await rscResponse.text();
 
-    let page = await renderToString(h(App, null, [h(Page, { page: 0 })]));
+    let page = await prerender(h(App, null, [h(Page, { page: 0 })]));
     const html = `<!doctype html>
 <html lang="en">
 	<head>
